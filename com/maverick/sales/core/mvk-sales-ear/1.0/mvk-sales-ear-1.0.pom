@@ -78,10 +78,6 @@
         <repository>
             <id>jreynoldlib-mvn-repo</id>
             <url>https://raw.github.com/reynoldmorel/jreynoldlib/master/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
         </repository>
     </repositories>
 </project>
