@@ -19,7 +19,8 @@
         <jreynoldlib.version>1.0</jreynoldlib.version>
         <hibernateMappingEntitiesPath>src/main/java/com/maverick/sales/core/hibernate</hibernateMappingEntitiesPath>
         <resourcesPath>src/main/java/com/maverick/sales/core/resources</resourcesPath>
-        <bundleMessages>bundle/message</bundleMessages>
+        <junit.version>4.4</junit.version>
+        <bundleMessages>bundle</bundleMessages>
     </properties>
     <dependencies>
         <dependency>
@@ -122,6 +123,58 @@
                     <value>Development</value>
                 </property>
             </activation>
+        </profile>
+        <profile>
+            <id>Testing</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>env</name>
+                    <value>Testting</value>
+                </property>
+            </activation>
+            <properties>
+                <db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
+                <db.url>jdbc:mysql://localhost:3306/maverick_local?createDatabaseIfNotExist=true</db.url>
+                <db.username>root</db.username>
+                <db.password>1234</db.password>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                    <version>${junit.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <classpathScope>test</classpathScope>
+                                    <mainClass>com.maverick.sales.core.TestMain</mainClass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
     <build>
