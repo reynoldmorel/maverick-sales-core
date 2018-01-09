@@ -11,6 +11,8 @@
     <packaging>jar</packaging>
     <name>mvk-sales-core</name>
     <properties>
+        <mysql.version>5.1.6</mysql.version>
+        <liquibase.version>3.1.1</liquibase.version>
         <hibernate.version>5.2.10.Final</hibernate.version>
         <hibernate.javax.persistence.version>1.0.1.Final</hibernate.javax.persistence.version>
         <spring.version>4.3.9.RELEASE</spring.version>
@@ -70,6 +72,76 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
@@ -106,6 +178,12 @@
                     <value>Release</value>
                 </property>
             </activation>
+            <properties>
+                <db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
+                <db.url>jdbc:mysql://localhost:3306/maverick_local?createDatabaseIfNotExist=true</db.url>
+                <db.username>root</db.username>
+                <db.password>1234</db.password>
+            </properties>
             <distributionManagement>
                 <repository>
                     <id>internal.repo</id>
@@ -123,6 +201,12 @@
                     <value>Development</value>
                 </property>
             </activation>
+            <properties>
+                <db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
+                <db.url>jdbc:mysql://localhost:3306/maverick_local?createDatabaseIfNotExist=true</db.url>
+                <db.username>root</db.username>
+                <db.password>1234</db.password>
+            </properties>
         </profile>
         <profile>
             <id>Testing</id>
@@ -180,6 +264,48 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <tasks name="generePropertiesFile">
+                                <!-- ensure that the target directory has been created. -->
+                                <propertyfile file="${resourcesPath}/spring/data_source/mvk-sales-core-jdbc.properties"
+                                              comment="Data Source Information">
+                                    <!-- list or key / value pair to be inserted in the generated properties file.  -->
+                                    <entry key="jdbc.driverClassName" value="${db.driverClassName}"/>
+                                    <entry key="jdbc.url" value="${db.url}"/>
+                                    <entry key="jdbc.username" value="${db.username}"/>
+                                    <entry key="jdbc.password" value="${db.password}"/>
+                                </propertyfile>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>commons-net</groupId>
+                        <artifactId>commons-net</artifactId>
+                        <version>1.4.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-commons-net</artifactId>
+                        <version>1.6.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.6.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -211,6 +337,15 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${resourcesPath}</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xsd</include>
                 </includes>
             </resource>
         </resources>
