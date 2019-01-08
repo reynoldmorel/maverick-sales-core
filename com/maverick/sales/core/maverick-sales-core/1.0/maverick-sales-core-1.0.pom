@@ -12,6 +12,7 @@
     <modules>
         <module>mvk-sales-ear</module>
         <module>mvk-sales-core</module>
+        <module>mvk-sales-core-model</module>
     </modules>
     <profiles>
         <profile>

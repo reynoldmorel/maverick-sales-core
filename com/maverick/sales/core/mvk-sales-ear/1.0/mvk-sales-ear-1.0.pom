@@ -73,6 +73,12 @@
             <version>1.0</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.maverick.sales.core</groupId>
+            <artifactId>mvk-sales-core-model</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <repositories>
